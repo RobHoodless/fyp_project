@@ -22,10 +22,23 @@ let is_operator s =
     | "/" -> true
     | "+" -> true
     | "-" -> true
+    | "sin" -> true
+    | "cos" -> true
+    | "tan" -> true
+    | _ -> false
+
+let is_function s =
+    match s with
+    | "sin" -> true
+    | "cos" -> true
+    | "tan" -> true
     | _ -> false
 
 let precedence op = 
     match op with 
+    | "sin" -> 6
+    | "cos" -> 6
+    | "tan" -> 6
     | "*" -> 3
     | "/" -> 3
     | "+" -> 2
@@ -63,7 +76,7 @@ let pop_from_stack curr_op op_stack out_queue =
 (* Should add mechanism to handle raising failures when a left parenthesis is not encountered *)
 let pop_until_left_paren op_stack out_queue = 
     let rec aux op_stack' out_queue' = 
-        if S.top op_stack' != "(" then
+        if (S.top op_stack') <> "(" then
             aux (S.pop op_stack') (Q.enqueue (S.top op_stack') out_queue')
         else 
             ((S.pop op_stack'), out_queue') in
@@ -90,7 +103,11 @@ let evaluate (expr: string list) : string Q.queue =
                    aux t out_queue (S.push h op_stack) 
                else if h = ")" then 
                    let (op_stack', out_queue') = pop_until_left_paren op_stack out_queue in 
-                   aux t out_queue' op_stack'
+                   (* Check if the top of the operator stack is a function and pop if so *)
+                   if (is_function (S.top op_stack')) then
+                       aux t (Q.enqueue (S.top op_stack') out_queue') (S.pop op_stack')
+                   else
+                       aux t out_queue' op_stack'
                else
                    raise UnknownToken
 
@@ -98,7 +115,7 @@ let evaluate (expr: string list) : string Q.queue =
     aux expr Q.empty S.empty
 
 let () = 
-    let expr = evaluate ["3";"-";"4";"*";"5"] in
+    let expr = evaluate ["4";"+";"sin";"(";"1";"+";"2";")";"*";"3"] in
     let rec aux queue = 
         if (Q.isEmpty queue) != true then
         let () = Printf.printf "%s " (Q.front queue) in
