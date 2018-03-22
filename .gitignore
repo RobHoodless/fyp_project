@@ -1,3 +1,4 @@
 todo.txt
 *.byte
 _build/*
+utilities/_build/*
