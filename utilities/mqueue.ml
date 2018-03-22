@@ -34,3 +34,11 @@ let front ((s1, s2) : 'a queue) : 'a =
 
 let map (f: 'a -> 'b) ((s1,s2) : 'a queue) : 'b queue = 
     (S.map f s1, S.map f s2)
+
+let to_list q = 
+    let rec aux q' l = 
+        if isEmpty q' then
+            List.rev l
+        else
+            aux (dequeue q') ((front q') :: l) in
+    aux q []

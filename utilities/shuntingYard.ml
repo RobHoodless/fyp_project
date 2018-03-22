@@ -64,7 +64,7 @@ let pop_from_stack curr_op op_stack out_queue =
             let expr1 = precedence (S.top op_stack') > precedence curr_op in 
             let expr2 = precedence (S.top op_stack') = precedence curr_op && 
                 association curr_op = Left in 
-            let expr3 = curr_op != "(" in 
+            let expr3 = (S.top op_stack') <> "(" in 
             if (((expr1 = true) || (expr2 = true)) && (expr3 = true)) then
                 aux (S.pop op_stack') (Q.enqueue (S.top op_stack') out_queue')
             else
@@ -104,7 +104,7 @@ let evaluate (expr: string list) : string Q.queue =
                else if h = ")" then 
                    let (op_stack', out_queue') = pop_until_left_paren op_stack out_queue in 
                    (* Check if the top of the operator stack is a function and pop if so *)
-                   if (is_function (S.top op_stack')) then
+                   if ((S.isEmpty op_stack' = false) && is_function (S.top op_stack')) then
                        aux t (Q.enqueue (S.top op_stack') out_queue') (S.pop op_stack')
                    else
                        aux t out_queue' op_stack'
@@ -113,11 +113,3 @@ let evaluate (expr: string list) : string Q.queue =
 
        | [] ->  pop_remainder op_stack out_queue in
     aux expr Q.empty S.empty
-
-let () = 
-    let expr = evaluate ["4";"+";"sin";"(";"1";"+";"2";")";"*";"3"] in
-    let rec aux queue = 
-        if (Q.isEmpty queue) != true then
-        let () = Printf.printf "%s " (Q.front queue) in
-        aux (Q.dequeue queue) in
-    aux expr

@@ -12,3 +12,5 @@
  val front : 'a queue -> 'a
 
  val map : ('a -> 'b) -> 'a queue -> 'b queue
+
+ val to_list : 'a queue -> 'a list
