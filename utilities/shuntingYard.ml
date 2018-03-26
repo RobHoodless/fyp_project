@@ -25,6 +25,8 @@ let is_operator s =
     | "sin" -> true
     | "cos" -> true
     | "tan" -> true
+    | "log" -> true
+    | "exp" -> true
     | _ -> false
 
 let is_function s =
@@ -32,6 +34,8 @@ let is_function s =
     | "sin" -> true
     | "cos" -> true
     | "tan" -> true
+    | "log" -> true
+    | "exp" -> true
     | _ -> false
 
 let precedence op = 
@@ -39,6 +43,8 @@ let precedence op =
     | "sin" -> 6
     | "cos" -> 6
     | "tan" -> 6
+    | "log" -> 6
+    | "exp" -> 6
     | "*" -> 3
     | "/" -> 3
     | "+" -> 2

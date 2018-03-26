@@ -8,8 +8,9 @@ type grammar =
         production_rules: production_rule list;
     };;
 
+exception InvalidInstance
+
 let parse_production_rules non_terminals json =
-    let () = Printf.printf "parse production rules\n" in 
     let rec aux non_terminals' p_rules =
     let open Yojson.Basic.Util in 
         match non_terminals' with 
@@ -108,18 +109,20 @@ let parse_language_instance bitstring grammar =
      *
      *
      *)
-    let rec aux l c_index =
-        let (l1, l2) = split_on_first_non_terminal l grammar.non_terminals in
-        if List.length l2 = 0 then
-            l1
+    let rec aux l c_index i =
+        if (i > 30) then
+            raise InvalidInstance
         else
-            let c_index' = if ( (c_index)  >= ((String.length bitstring))) then 0 else c_index in 
-            let p_rule_rhs = reduce_non_terminal bitstring c_index' (get_rules grammar (List.hd l2)) in
-            let l2' = replace_first_token p_rule_rhs l2 in
-            let l' = append l1 l2' in
-            let () = Printf.printf "%s\n" (String.concat " " l') in 
-            aux l' (c_index' + 8) 
-    in aux (grammar.start :: []) 0;;
+            let (l1, l2) = split_on_first_non_terminal l grammar.non_terminals in
+            if List.length l2 = 0 then
+                l1
+            else
+                let c_index' = if ( (c_index)  >= ((String.length bitstring))) then 0 else c_index in 
+                let p_rule_rhs = reduce_non_terminal bitstring c_index' (get_rules grammar (List.hd l2)) in
+                let l2' = replace_first_token p_rule_rhs l2 in
+                let l' = append l1 l2' in
+                aux l' (c_index' + 8) (i+1) 
+    in aux (grammar.start :: []) 0 0;;
 
 
 (* Helper functions *)
@@ -150,11 +153,3 @@ let print_grammar grammar =
     let () = printf "Production rules: \n" in
     print_rules grammar.production_rules;;
 
-
-
-let () = 
-    (* Read the JSON file *)
-    let g = parse_grammar_file "test_problems/symbolic_regression/grammar.json" in 
-    let s = parse_language_instance "1110110110110100111111101110110100000110" g in 
-    let () = Printf.printf "Final string: %s" (String.concat " " s) in
-    let () = Printf.printf "\n" in ();;

@@ -13,9 +13,11 @@ let arity s =
     | "/" -> 2
     | "+" -> 2
     | "-" -> 2
+    | "log" -> 1
     | "sin" -> 1
     | "cos" -> 1
     | "tan" -> 1
+    | "exp" -> 1
     | _ -> 0
 
 (* List of functions that map to the operations within the expressions. All of the functions
@@ -53,6 +55,8 @@ let get_one_arg_func s =
     | "sin" -> sin
     | "cos" -> cos
     | "tan" -> tan
+    | "log" -> log
+    | "exp" -> exp
     | _ -> id2
 
 
@@ -92,14 +96,4 @@ let evaluate (expr: string list) : float =
         | [] -> S.top op_stack in
     aux expr S.empty
 
-let () =
-    let rec aux q = 
-        if (Q.isEmpty q) != true then
-            let () = Printf.printf "%s " (Q.front q) in 
-            aux (Q.dequeue q) in 
-    let expr = ShuntingYard.evaluate ["(";"(";"(";"6";"+";"7";")";"+";"3";")";"/";"2";")";"+";"sin";"(";"3";"+";"4";")"] in 
-    let value = evaluate (Q.to_list expr) in 
-    Printf.printf "The answer is: %f" value 
 
-(* 
-    let expr = ShuntingYard.evaluate ["(";"(";"(";"6";"+";"7";")";"+";"3";"/";"2";")";"+";"sin";"(";"3";"+";"4";")"] *) 
