@@ -26,20 +26,38 @@ let strip_x expr x =
         | [] -> List.rev acc in
     aux expr []
 
+let print_expression expr = 
+    let rec aux expr' s = 
+        match expr' with 
+        | h :: t -> aux t (s ^ " " ^ h) 
+        | [] -> s in
+    let s = aux expr "" in
+    let s' = Printf.sprintf "The expression is: %s" s in
+    print_endline s'
+
+
 let fitness values expr = 
     let rec aux values' acc =
         match values' with 
         | (a, b) :: t ->
                 let expr' = strip_x expr a in
+                (*let () = print_expression expr' in*)
                 let sy_expr = Q.to_list (Shunt.evaluate expr') in
                 let r = Eval.evaluate sy_expr in
-                aux t (acc +. abs_float (b -. r))
+                if (compare r nan = 0 || compare r infinity = 0 || compare (r *. -1.0) infinity = 0) then
+                    1000.0
+                else
+                    aux t (acc +. abs_float (b -. r))
         | [] ->
                 acc in 
     let fcost = aux values 0.0 in
-    (* Accounting for rounding errors *)
-    if fcost < 0.0001 then
+    if (fcost < 0.00001) then
         0.0 
-    else
+    else 
         fcost
+
+(*let () = 
+    let fitness' = fitness (parse_data_file "test_problems/symbolic_regression/test_data.json") in
+    let r = fitness' ["X";"-";"1.0";"/";"X"] in
+    Printf.printf "The fitness value is: %f" r*)
 

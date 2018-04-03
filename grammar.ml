@@ -70,7 +70,8 @@ let split_on_first_non_terminal language_instance non_terminals =
  * better to accept codon length as a parameter
  *)
 let reduce_non_terminal bitstring c_index p_rules = 
-    let codon_value = Int32.to_int (Int32.of_string ("0b" ^ String.sub bitstring c_index 7)) in 
+    let bt_length = if (String.length bitstring < 8) then (String.length bitstring) else 7 in
+    let codon_value = Int32.to_int (Int32.of_string ("0b" ^ String.sub bitstring c_index bt_length)) in 
     let (k, v) = p_rules in 
     let rule_index = codon_value mod (List.length v) in
     let rule = List.nth v rule_index in 
@@ -110,23 +111,19 @@ let parse_language_instance bitstring grammar =
      *
      *)
     let rec aux l c_index i =
-        if (i > 30) then
+        if (i > 100) then
             raise InvalidInstance
         else
             let (l1, l2) = split_on_first_non_terminal l grammar.non_terminals in
             if List.length l2 = 0 then
                 l1
             else
-                let c_index' = if ( (c_index)  >= ((String.length bitstring))) then 0 else c_index in 
+                let c_index' = if ( (c_index)  >= ((String.length bitstring) - 9)) then 0 else c_index in 
                 let p_rule_rhs = reduce_non_terminal bitstring c_index' (get_rules grammar (List.hd l2)) in
                 let l2' = replace_first_token p_rule_rhs l2 in
                 let l' = append l1 l2' in
                 aux l' (c_index' + 8) (i+1) 
     in aux (grammar.start :: []) 0 0;;
-
-
-(* Helper functions *)
-
 
 (* Evil I/O stuff *)
 let print_rules rules = 

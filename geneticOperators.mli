@@ -1,3 +1,4 @@
+module G = Grammar 
 
 type minmax = Minimizing | Maximizing
 
@@ -9,7 +10,7 @@ val gen_init_pop : int -> string list
  *  Recall that strings a zero indexed.  *)
 val mutate : string  -> int -> string
 
-val crossover: string * string -> int -> string * string
+val crossover: string * string -> int -> int -> string * string
 
 val get_best_fitness: (string * float) list -> minmax -> (string * float)
 
@@ -25,4 +26,8 @@ val selection: minmax -> (string * float) list -> (string * float) list
  * Standard genetic algorithm - applies crossover, mutation at 80/12
  * 
  *)
-val standard_ga: int -> int -> string list -> string list
+val standard_ga: int -> int -> int -> string list -> string list
+
+val normalise_and_invert: (string * float) list -> minmax -> (bytes * float) list
+
+val steady_state_selection: G.grammar ->  (string * float) list -> (string list -> float) -> minmax -> (string * float) list 
