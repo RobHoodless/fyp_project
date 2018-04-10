@@ -2,8 +2,7 @@ module G = Grammar
 
 type minmax = Minimizing | Maximizing
 
-(** This function will generate a list (of size n) containing bit strings that are 3 codons in
- *  length and consist solely of zeros. *)
+(** This function will generate a list (of size n) *)
 val gen_init_pop : int -> string list
 
 (** This function will mutate the bitstring provided, flipping the bit at the index provided.
@@ -23,7 +22,7 @@ val selection: minmax -> (string * float) list -> (string * float) list
 
 
 (**
- * Standard genetic algorithm - applies crossover, mutation at 80/12
+ * Standard genetic algorithm - applies crossover, mutation, duplication as parameterised.
  * 
  *)
 val standard_ga: int -> int -> int -> string list -> string list

@@ -253,21 +253,3 @@ let standard_ga c_prob m_prob d_prob pop =
             aux pop'' acc' 
         | [] -> acc in
     aux pop [] 
-
-(*let () = 
-    let (a,b) = crossover ("0011", "1100") 1 in
-    Printf.printf "(%s, %s)" a b 
-*)
-(*
-let () = 
-    let a = selection Minimizing [("0000", 1000.0);("0000", 1000.0);"0000", 1000.0] in
-    Printf.printf "%f" b
-    let rec aux a' =
-        match a' with 
-        | [] -> ()
-        | (x,y) :: t -> 
-                let () = Printf.printf "(%s, %f) " x y in 
-                aux t in
-
-    aux a
-    *)

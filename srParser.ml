@@ -56,8 +56,3 @@ let fitness values expr =
     else 
         fcost
 
-(*let () = 
-    let fitness' = fitness (parse_data_file "test_problems/symbolic_regression/test_data.json") in
-    let r = fitness' ["X";"-";"1.0";"/";"X"] in
-    Printf.printf "The fitness value is: %f" r*)
-

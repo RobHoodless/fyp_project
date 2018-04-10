@@ -49,12 +49,12 @@ let precedence op =
     | "/" -> 3
     | "+" -> 2
     | "-" -> 2
-    | _ -> -1;; (* Replace this with optional return value *)
+    | _ -> -1 
 
 let association op =
     match op with 
     | "^" -> Right
-    | _ -> Left;;
+    | _ -> Left
 
 (*  This function pops operators off the operator stack and onto the output queue while the 
  *  following conditions are true: 

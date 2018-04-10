@@ -11,7 +11,6 @@ let isEmpty ((s1,s2): 'a queue) =
 let enqueue (x : 'a) ((s1, s2) : 'a queue) : 'a queue = 
     ((S.push x s1), s2)
 
-(* Refactor this function to stop using a tuple on the recursive auxiliary function. *)
 let rev (s: 'a S.stack) : 'a S.stack = 
     let rec aux ((prev : 'a S.stack), (curr : 'a S.stack)) : 'a S.stack = 
         if S.isEmpty prev
