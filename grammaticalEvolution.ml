@@ -17,6 +17,18 @@ let apply_fitness_function grammar fitness population minmax =
                       | GeneticOp.Maximizing -> aux t ((h, 0.0) :: acc) in 
     aux population []
 
+let standard_deviation pop xbar n = 
+    let rec aux pop' acc = 
+        match pop' with
+        | [] -> acc
+        | h :: t -> 
+                let x = abs_float ( h -. xbar) in
+                let xs = x *. x in
+                aux t (xs +. acc) in
+    let sum = aux pop 0.0 in
+    sqrt ( sum /. n)
+
+
 let print_population pop = 
     let rec aux pop' = 
         match pop' with
@@ -48,7 +60,11 @@ let evolve grammar init_pop selection ga fitness goal_fitness minmax max_gen =
         let (imax, fmax) = GeneticOp.get_best_fitness f_pop minmax in
         let (imin, fmin) = GeneticOp.get_best_fitness f_pop GeneticOp.Maximizing in
         let li = List.fold_left (^) "" (G.parse_language_instance imax grammar) in
-        let s' = Printf.sprintf "Gen %d The best fitness is %f and worst fitness is %f (%s) " gen fmax fmin li in
+        let (l1, l2) = List.split f_pop in
+        let n = float_of_int (List.length l2) in
+        let xbar = (List.fold_left (+.) 0.0 l2) /. n in
+        let sd = standard_deviation l2 xbar n in
+        let s' = Printf.sprintf "%d %f %f %f %f" gen fmax fmin xbar sd in
         let () = print_endline s' in
         if (fmax = goal_fitness) then
             (imax, fmax) 

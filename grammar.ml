@@ -70,7 +70,7 @@ let split_on_first_non_terminal language_instance non_terminals =
  * better to accept codon length as a parameter
  *)
 let reduce_non_terminal bitstring c_index p_rules = 
-    let bt_length = if (String.length bitstring < 8) then (String.length bitstring) else 7 in
+    let bt_length = if (String.length bitstring < 8) then (String.length bitstring) else 8 in
     let codon_value = Int32.to_int (Int32.of_string ("0b" ^ String.sub bitstring c_index bt_length)) in 
     let (k, v) = p_rules in 
     let rule_index = codon_value mod (List.length v) in

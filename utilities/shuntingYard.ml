@@ -79,7 +79,6 @@ let pop_from_stack curr_op op_stack out_queue =
             (op_stack', out_queue') in
     aux op_stack out_queue
 
-(* Should add mechanism to handle raising failures when a left parenthesis is not encountered *)
 let pop_until_left_paren op_stack out_queue = 
     let rec aux op_stack' out_queue' = 
         if (S.top op_stack') <> "(" then
